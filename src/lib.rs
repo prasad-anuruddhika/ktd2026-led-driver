@@ -1,14 +1,22 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+mod device_impl;
+pub mod constants;
+
+pub struct KTD2026<I2C>{
+    i2c: I2C,
+    address: u8,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+// pub fn add(left: usize, right: usize) -> usize {
+//     left + right
+// }
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+
+//     #[test]
+//     fn it_works() {
+//         let result = add(2, 2);
+//         assert_eq!(result, 4);
+//     }
+// }
