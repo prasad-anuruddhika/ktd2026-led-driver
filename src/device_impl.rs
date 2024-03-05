@@ -56,4 +56,43 @@ I2C: i2c::Write<Error = E> + i2c::WriteRead <Error = E>
 
         Ok(())
     }
+
+    pub fn led_on(&mut self, led: Ktd2026LED, mode: Ktd2026Mode, bright: u8) -> Result<(), E>{
+        
+        let led_reg = led as u8;
+        let default_bright_ctrl_reg = Register::addr(Register::RegLED1CurrentOut);
+
+        println!("Led: {}, default: {},  Write: {}, Bright: {}",
+                led_reg, default_bright_ctrl_reg, 
+                (default_bright_ctrl_reg + led_reg/2),
+                bright
+                );
+
+        if let Some(bright_ctrl_reg) = Register::from_value(default_bright_ctrl_reg + led_reg/2){
+            // set led brightness
+            self.write_register(bright_ctrl_reg, bright)?;
+        }
+
+        // set led mode
+        let led_mode = match mode {
+            Ktd2026Mode::LedAlwaysOff => {
+                // this need to refactor
+                // shadow memory need to perform this op
+                !(!(Ktd2026Mode::LedAlwaysOff as u8) << (led as u8))
+            }
+            _ => {
+                (mode as u8) << (led as u8)
+            }
+        };
+
+        println!("Mode : {:b}", led_mode);
+
+        // let led_mode = (mode as u8) << (led as u8);
+        self.write_register(Register::RegChannelControl, led_mode)?;
+        
+
+        Ok(())
+    }
+
+
 }
