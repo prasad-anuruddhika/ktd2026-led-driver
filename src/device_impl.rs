@@ -159,4 +159,44 @@ I2C: i2c::Write<Error = E> + i2c::WriteRead <Error = E>
     }
 
 
+    pub fn timerslot_control(&mut self, t_slot: TimeSlotControl) -> Result<(), E>{
+        // read time slot details from shadow memory
+        let mut t_slot_reg_value = self.read_shadow_memory(Register::RegEnableReset);
+
+        println!("existing timer slot: {}", t_slot_reg_value);
+        // clear existing time slot control settings
+        t_slot_reg_value &= MASK_TIMER_SLOT_CONTROL;
+
+        // set new time slot data
+        t_slot_reg_value |= t_slot as u8;
+
+        self.update_device_memory(Register::RegEnableReset, t_slot_reg_value) ?;
+
+        Ok(())
+
+    }
+
+    // flash period = period_multiplier * 0.128 + 0.256s;
+    // except 0, period = 0.128s
+    pub fn set_period(&mut self, period_multiplier: u8) -> Result<(), E>{
+        self.update_device_memory(Register::RegFlashPeriod, period_multiplier) ?;
+
+        Ok(())
+    }
+
+    // this method used to set pwm duty
+    // pwm duty set as a percentage value of pwm period
+    // pwm_duty = pwm_duty_multiplier * 0.4%
+    pub fn set_pwm_duty(&mut self, pwm_channel: Ktd2026Pwm, pwm_duty_multiplier: u8) -> Result<(), E>{
+        let pwm_duty_reg = Register::RegFlashOnTime1 as u8 + pwm_channel as u8;
+
+        // update pwm duty data on device memory through shadow memory
+        if let Some(reg_addr) = Register::from_value(pwm_duty_reg){
+            self.update_device_memory(reg_addr, pwm_duty_multiplier) ?;
+        }
+
+        Ok(())
+    }
+
+
 }

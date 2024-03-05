@@ -1,5 +1,6 @@
 pub const MAX_LED_COUNT: usize              =   3;
 pub const KTD2026_NUM_REGISTERS: usize      =   10;
+pub const MASK_TIMER_SLOT_CONTROL: u8       =   0x07;
 
 #[derive(Clone, Copy)]
 pub enum Register{
@@ -127,4 +128,16 @@ impl Value for Ktd2026Mode {
     fn value(self) -> u8 {
         self as u8
     }
+}
+
+pub enum TimeSlotControl {
+    Tslot1                      = 0,
+    Tslot2                      = 1,
+    Tslot3                      = 2,
+    Tslot4                      = 3,
+}
+
+pub enum Ktd2026Pwm {
+    Pwm1                        = 0,
+    Pwm2                        = 1,
 }
