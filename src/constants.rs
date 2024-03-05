@@ -1,3 +1,6 @@
+pub const MAX_LED_COUNT: usize              =   3;
+pub const KTD2026_NUM_REGISTERS: usize      =   10;
+
 #[derive(Clone, Copy)]
 pub enum Register{
     RegEnableReset              = 0x00,
@@ -87,11 +90,23 @@ impl RegValue for TCtrlResetModes {
     }
 }
 
-#[derive(Clone, Copy)]
+pub enum Ktd2026Channel {
+    Channel1                    = 0,
+    Channel2                    = 1,
+    Channel3                    = 2,
+}
+
+impl Value for Ktd2026Channel {
+    fn value(self) -> u8 {
+        self as u8
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
 pub enum Ktd2026LED {
-    LedG                        = 0,
-    LedB                        = 2,
-    LedR                        = 4,
+    LedRed                      = 0,
+    LedGreen                    = 1,
+    LedBlue                     = 2,
 }
 
 impl Value for Ktd2026LED {
@@ -100,6 +115,7 @@ impl Value for Ktd2026LED {
     }
 }
 
+#[derive(Debug)]
 pub enum Ktd2026Mode {
     LedAlwaysOff                = 0x00,
     LedAlwaysOn                 = 0x01,
