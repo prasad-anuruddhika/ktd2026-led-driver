@@ -63,20 +63,20 @@ I2C: i2c::Write<Error = E> + i2c::WriteRead <Error = E>
     // method for initialize the driver
     // as this led chip has i2c read issue, this driver keep a shadow memory
     // this will create a shadow memory and populate default values to it
-    pub fn init(&mut self, ch: (u8, u8, u8), brightness: (u8, u8, u8)){
+    pub fn init(&mut self, ch_red: u8, ch_green: u8, ch_blue: u8){
         let led_red = Ktd2026LedParam{
-            channel: ch.0,
-            brightness: brightness.0,
+            channel: ch_red,
+            _brightness: 0,
         };
 
         let led_green: Ktd2026LedParam = Ktd2026LedParam{
-            channel: ch.1,
-            brightness: brightness.1,
+            channel: ch_green,
+            _brightness: 0,
         };
 
         let led_blue = Ktd2026LedParam{
-            channel: ch.2,
-            brightness: brightness.2,
+            channel: ch_blue,
+            _brightness: 0,
         };
 
         self.ktd2026_data = Ktd2026Data{
