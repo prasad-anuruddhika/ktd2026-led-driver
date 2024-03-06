@@ -17,6 +17,8 @@ fn main(){
     let mut led_driver = KTD2026::new(i2c_dev, DEVICE_ADDR);
 
     // initialize led driver
+    // RGB convention used in here
+    // first value is RED, then Green, then Blue
     led_driver.init(Ktd2026Channel::value(Ktd2026Channel::Channel3),
                     Ktd2026Channel::value(Ktd2026Channel::Channel1),
                     Ktd2026Channel::value(Ktd2026Channel::Channel2));
